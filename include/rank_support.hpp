@@ -13,15 +13,14 @@ class rank_support {
   private:
     static_assert(Trit < 3, "");
 
-    static constexpr uint32_t TRITS_PER_LB = 65550;
-    static constexpr uint32_t TRITS_PER_SB = 50;
+    static constexpr uint32_t TRITS_PER_LB = 65550U;
+    static constexpr uint32_t TRITS_PER_SB = 50U;
 
     static constexpr uint32_t TRYTES_PER_LB = TRITS_PER_LB / trit_vector::TRITS_PER_BYTE;  // 13110 trytes
     static constexpr uint32_t TRYTES_PER_SB = TRITS_PER_SB / trit_vector::TRITS_PER_BYTE;  // 10 trytes
 
   public:
     rank_support() = default;
-    ~rank_support() = default;
 
     explicit rank_support(const trit_vector* vec) {
         build(vec);
@@ -32,8 +31,8 @@ class rank_support {
         m_LBs.clear();
         m_SBs.clear();
 
-        m_LBs.reserve(m_vec->m_trytes.size() / TRYTES_PER_LB + 1);
-        m_SBs.reserve(m_vec->m_trytes.size() / TRYTES_PER_SB + 1);
+        m_LBs.reserve(m_vec->m_trytes.size() / TRYTES_PER_LB + 1U);
+        m_SBs.reserve(m_vec->m_trytes.size() / TRYTES_PER_SB + 1U);
 
         uint32_t rank = 0;
         for (uint32_t i = 0; i < m_vec->m_trytes.size(); ++i) {
@@ -46,21 +45,10 @@ class rank_support {
             }
             rank += LUT[m_vec->m_trytes[i]];
         }
-
-        std::cout << "m_LBs: ";
-        for (uint32_t i = 0; i < m_LBs.size(); ++i) {
-            std::cout << m_LBs[i] << " ";
-        }
-        std::cout << "\n";
-
-        std::cout << "m_SBs: ";
-        for (uint32_t i = 0; i < m_SBs.size(); ++i) {
-            std::cout << m_SBs[i] << " ";
-        }
-        std::cout << "\n";
     }
 
     uint32_t rank(const uint32_t i) const {
+        assert(m_vec != nullptr);
         assert(i < m_vec->get_num_trits());
 
         const uint32_t lb_pos = i / TRITS_PER_LB;
@@ -75,15 +63,15 @@ class rank_support {
         const uint8_t tryte = m_vec->m_trytes[tryte_pos];
         const uint32_t k = i % trit_vector::TRITS_PER_BYTE;
 
-        if (k < 0)
+        if (k > 0)
             if (tryte % 3 == Trit) ++rank;
-        if (k < 1)
+        if (k > 1)
             if (tryte / 3 % 3 == Trit) ++rank;
-        if (k < 2)
+        if (k > 2)
             if (tryte / 9 % 3 == Trit) ++rank;
-        if (k < 3)
+        if (k > 3)
             if (tryte / 27 % 3 == Trit) ++rank;
-        if (k < 4)
+        if (k > 4)
             if (tryte / 81 % 3 == Trit) ++rank;
 
         return rank;
