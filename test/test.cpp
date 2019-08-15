@@ -4,7 +4,7 @@
 #include <rank_support.hpp>
 #include <trit_vector.hpp>
 
-static constexpr uint32_t NUM_TRITS = 1000000;
+static constexpr uint32_t NUM_TRITS = 5000000;
 
 std::vector<uint8_t> generate_trits() {
     std::random_device rd;

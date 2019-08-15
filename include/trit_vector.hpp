@@ -88,11 +88,13 @@ class trit_vector {
                 return m_trytes[div] / 27 % 3;
             case 4:
                 return m_trytes[div] / 81 % 3;
-            default:
-                // should not come
-                assert(false);
         }
+
+        // should not come
+        assert(false);
+        return uint8_t(-1);
     }
+
     uint8_t operator[](uint32_t i) const {
         return get(i);
     }
