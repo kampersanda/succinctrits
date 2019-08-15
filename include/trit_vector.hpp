@@ -103,6 +103,10 @@ class trit_vector {
         return m_num_trits;
     }
 
+    uint64_t size_in_bytes() const {
+        return m_trytes.size() + sizeof(m_num_trits);
+    }
+
   private:
     static constexpr uint32_t TRITS_PER_BYTE = 5;
 

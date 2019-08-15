@@ -17,4 +17,6 @@ message(STATUS "CXX_FLAGS_DEBUG are ${CMAKE_CXX_FLAGS_DEBUG}")
 message(STATUS "CXX_FLAGS_RELEASE are ${CMAKE_CXX_FLAGS_RELEASE}")
 
 include_directories(include)
+
 add_subdirectory(test)
+add_subdirectory(benchmark)

@@ -73,6 +73,10 @@ class rank_support {
         return rank(i);
     }
 
+    uint64_t size_in_bytes() const {
+        return m_LBs.size() * sizeof(uint32_t) + m_SBs.size() * sizeof(uint16_t);
+    }
+
   private:
     static const uint8_t LUT[5][243];  // 243 = 3**5
 
