@@ -13,11 +13,11 @@ class rank_support {
   private:
     static_assert(Trit < 3, "");
 
-    static constexpr uint32_t TRITS_PER_LB = 65550U;
-    static constexpr uint32_t TRITS_PER_SB = 50U;
+    static constexpr uint64_t TRITS_PER_LB = 65550;
+    static constexpr uint64_t TRITS_PER_SB = 50;
 
-    static constexpr uint32_t TRYTES_PER_LB = TRITS_PER_LB / trit_vector::TRITS_PER_BYTE;  // 13110 trytes
-    static constexpr uint32_t TRYTES_PER_SB = TRITS_PER_SB / trit_vector::TRITS_PER_BYTE;  // 10 trytes
+    static constexpr uint64_t TRYTES_PER_LB = TRITS_PER_LB / trit_vector::TRITS_PER_BYTE;  // 13110 trytes
+    static constexpr uint64_t TRYTES_PER_SB = TRITS_PER_SB / trit_vector::TRITS_PER_BYTE;  // 10 trytes
 
   public:
     rank_support() = default;
@@ -31,11 +31,11 @@ class rank_support {
         m_LBs.clear();
         m_SBs.clear();
 
-        m_LBs.reserve(m_vec->m_trytes.size() / TRYTES_PER_LB + 1U);
-        m_SBs.reserve(m_vec->m_trytes.size() / TRYTES_PER_SB + 1U);
+        m_LBs.reserve(m_vec->m_trytes.size() / TRYTES_PER_LB + 1);
+        m_SBs.reserve(m_vec->m_trytes.size() / TRYTES_PER_SB + 1);
 
-        uint32_t rank = 0;
-        for (uint32_t i = 0; i < m_vec->m_trytes.size(); ++i) {
+        uint64_t rank = 0;
+        for (uint64_t i = 0; i < m_vec->m_trytes.size(); ++i) {
             if (i % TRYTES_PER_LB == 0) {
                 m_LBs.push_back(rank);
             }
@@ -47,41 +47,63 @@ class rank_support {
         }
     }
 
-    uint32_t rank(const uint32_t i) const {
+    void set(const trit_vector* vec) {
+        m_vec = vec;
+    }
+
+    uint64_t rank(const uint64_t i) const {
         assert(m_vec != nullptr);
         assert(i < m_vec->get_num_trits());
 
-        const uint32_t lb_pos = i / TRITS_PER_LB;
-        const uint32_t sb_pos = i / TRITS_PER_SB;
-        uint32_t rank = m_LBs[lb_pos] + m_SBs[sb_pos];
+        const uint64_t lb_pos = i / TRITS_PER_LB;
+        const uint64_t sb_pos = i / TRITS_PER_SB;
+        uint64_t rank = m_LBs[lb_pos] + m_SBs[sb_pos];
 
-        const uint32_t tryte_pos = i / trit_vector::TRITS_PER_BYTE;
-        const uint32_t tryte_beg = tryte_pos / TRYTES_PER_SB * TRYTES_PER_SB;
-        for (uint32_t j = tryte_beg; j < tryte_pos; ++j) {
+        const uint64_t tryte_pos = i / trit_vector::TRITS_PER_BYTE;
+        const uint64_t tryte_beg = tryte_pos / TRYTES_PER_SB * TRYTES_PER_SB;
+        for (uint64_t j = tryte_beg; j < tryte_pos; ++j) {
             rank += LUT[4][m_vec->m_trytes[j]];
         }
 
         const uint8_t tryte = m_vec->m_trytes[tryte_pos];
-        const uint32_t k = i % trit_vector::TRITS_PER_BYTE;
+        const uint64_t k = i % trit_vector::TRITS_PER_BYTE;
 
         if (k != 0) {
             rank += LUT[k - 1][tryte];
         }
         return rank;
     }
-    uint32_t operator()(const uint32_t i) const {
+    uint64_t operator()(const uint64_t i) const {
         return rank(i);
     }
 
     uint64_t size_in_bytes() const {
-        return m_LBs.size() * sizeof(uint32_t) + m_SBs.size() * sizeof(uint16_t);
+        return m_LBs.size() * sizeof(uint64_t) + m_SBs.size() * sizeof(uint16_t);
+    }
+    void save(std::ostream& os) const {
+        size_t n_L = m_LBs.size();
+        os.write(reinterpret_cast<const char*>(&n_L), sizeof(size_t));
+        os.write(reinterpret_cast<const char*>(m_LBs.data()), sizeof(uint64_t) * n_L);
+        size_t n_S = m_SBs.size();
+        os.write(reinterpret_cast<const char*>(&n_S), sizeof(size_t));
+        os.write(reinterpret_cast<const char*>(m_SBs.data()), sizeof(uint16_t) * n_S);
+    }
+    void load(std::istream& is) {
+        size_t n_L = 0;
+        is.read(reinterpret_cast<char*>(&n_L), sizeof(size_t));
+        m_LBs.resize(n_L);
+        is.read(reinterpret_cast<char*>(m_LBs.data()), sizeof(uint64_t) * n_L);
+        size_t n_S = 0;
+        is.read(reinterpret_cast<char*>(&n_S), sizeof(size_t));
+        m_SBs.resize(n_S);
+        is.read(reinterpret_cast<char*>(m_SBs.data()), sizeof(uint16_t) * n_S);
     }
 
   private:
     static const uint8_t LUT[5][243];  // 243 = 3**5
 
     const trit_vector* m_vec = nullptr;
-    std::vector<uint32_t> m_LBs;
+    std::vector<uint64_t> m_LBs;
     std::vector<uint16_t> m_SBs;
 };
 
