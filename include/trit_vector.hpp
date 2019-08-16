@@ -75,20 +75,20 @@ class trit_vector {
     uint8_t get(uint64_t i) const {
         assert(i < m_num_trits);
 
-        const uint64_t div = i / TRITS_PER_BYTE;
+        const uint64_t pos = i / TRITS_PER_BYTE;
         const uint64_t mod = i % TRITS_PER_BYTE;
 
         switch (mod) {
             case 0:
-                return m_trytes[div] % 3;
+                return m_trytes[pos] % 3;
             case 1:
-                return m_trytes[div] / 3 % 3;
+                return m_trytes[pos] / 3 % 3;
             case 2:
-                return m_trytes[div] / 9 % 3;
+                return m_trytes[pos] / 9 % 3;
             case 3:
-                return m_trytes[div] / 27 % 3;
+                return m_trytes[pos] / 27 % 3;
             case 4:
-                return m_trytes[div] / 81 % 3;
+                return m_trytes[pos] / 81 % 3;
         }
 
         // should not come
