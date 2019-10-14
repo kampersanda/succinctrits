@@ -2,7 +2,7 @@
 #include <iostream>
 #include <random>
 
-#include <rank_support.hpp>
+#include <rs_support.hpp>
 #include <trit_vector.hpp>
 
 class timer {
@@ -40,9 +40,9 @@ std::vector<uint32_t> generate_indices(uint32_t num_trits, uint32_t num_queries)
 
 template <uint8_t Trit>
 void rank_benchmark(const succinctrits::trit_vector& tv, const std::vector<uint32_t>& indices) {
-    std::cout << "=== benchmar<" << int(Trit) << ">: "  //
+    std::cout << "=== benchmark<" << int(Trit) << ">: "  //
               << tv.get_num_trits() << " trits; " << indices.size() << " queries ===" << std::endl;
-    succinctrits::rank_support<Trit> tv_r(&tv);
+    succinctrits::rs_support<Trit> tv_r(&tv);
     timer t;
     for (uint32_t i = 0; i < indices.size(); ++i) {
         uint32_t rank = tv_r.rank(indices[i]);
@@ -57,14 +57,14 @@ void rank_benchmark(const succinctrits::trit_vector& tv, const std::vector<uint3
 
     std::cout << "# runtime:\t" << elapsed_nanosec / indices.size() << " ns/op" << std::endl;
     std::cout << "# trit_vector:\t" << tv_size_in_bits / tv.get_num_trits() << " bits/trit" << std::endl;
-    std::cout << "# rank_support:\t" << rank_size_in_bits / tv.get_num_trits() << " bits/trit" << std::endl;
+    std::cout << "# rs_support:\t" << rank_size_in_bits / tv.get_num_trits() << " bits/trit" << std::endl;
 }
 
 int main() {
     std::vector<uint32_t> nums_trits = {100'000, 1'000'000, 10'000'000};
     for (uint32_t num_trits : nums_trits) {
         auto trits = generate_trits(num_trits);
-        auto indices = generate_indices(num_trits, 10'000);
+        auto indices = generate_indices(num_trits, 1'000);
         succinctrits::trit_vector tv(trits.begin(), trits.size());
         rank_benchmark<0>(tv, indices);
         rank_benchmark<1>(tv, indices);

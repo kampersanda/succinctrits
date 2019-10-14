@@ -7,7 +7,7 @@
 namespace succinctrits {
 
 template <uint8_t>
-class rank_support;
+class rs_support;
 
 class trit_vector {
   public:
@@ -128,9 +128,9 @@ class trit_vector {
     std::vector<uint8_t> m_trytes;  // each of 5 trits
     uint64_t m_num_trits = 0;
 
-    friend class rank_support<0>;
-    friend class rank_support<1>;
-    friend class rank_support<2>;
+    friend class rs_support<0>;
+    friend class rs_support<1>;
+    friend class rs_support<2>;
 };
 
 }  // namespace succinctrits
