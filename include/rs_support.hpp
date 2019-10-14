@@ -142,6 +142,9 @@ class rs_support {
         }
     }
 
+    uint64_t get_num_trits() const {
+        return m_vec->get_num_trits();
+    }
     uint64_t get_num_target_trits() const {
         return m_num_target_trits;
     }
