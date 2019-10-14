@@ -56,6 +56,35 @@ Select_1(5) = 12
 Select_2(0) = 3
 ```
 
+## Benchmark
+
+- 3.5 GHz 6-Core Intel Xeon E5
+- 32 GB 1866 MHz DDR3
+- OS X 10.14.6
+- Apple clang version 11.0.0
+
+```
+$ ./benchmark/benchmark 
+=== Benchmark for 1000000 trits ===
+# access time:	23.0729 ns/op
+# rank time:	38.6154 ns/op
+# select time:	603.316 ns/op
+# trit_vector:	1.60006 bits/trit
+# rs_support:	0.321088 bits/trit
+=== Benchmark for 10000000 trits ===
+# access time:	30.4135 ns/op
+# rank time:	52.1469 ns/op
+# select time:	614.085 ns/op
+# trit_vector:	1.60001 bits/trit
+# rs_support:	0.320986 bits/trit
+=== Benchmark for 100000000 trits ===
+# access time:	26.3263 ns/op
+# rank time:	100.848 ns/op
+# select time:	700.206 ns/op
+# trit_vector:	1.6 bits/trit
+# rs_support:	0.320977 bits/trit
+```
+
 ## References
 
 1. Mihai Patrascu. Succincter. In FOCS, pages 305–313, 2008.
