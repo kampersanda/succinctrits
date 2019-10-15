@@ -129,5 +129,5 @@ $ ./benchmark/benchmark
 ## References
 
 1. Mihai Patrascu. Succincter. In FOCS, pages 305–313, 2008.
-2. Rodrigo Gonz ́alez, Szymon Grabowski, Veli Ma ̈kinen, and Gonzalo Navarro. Practical implementation of rank and select queries. In WEA, pages 27–38, 2005.
-3. Johannes Fischer and Daniel Peters. GLOUDS: Repre- senting tree-like graphs. J. Discrete Algorithm., 36:39– 49, 2016.
+2. Rodrigo González, Szymon Grabowski, Veli Mäkinen, and Gonzalo Navarro. Practical implementation of rank and select queries. In WEA, pages 27–38, 2005.
+3. Johannes Fischer and Daniel Peters. GLOUDS: Representing tree-like graphs. J. Discrete Algorithm., 36:39– 49, 2016.
