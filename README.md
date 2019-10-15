@@ -18,6 +18,7 @@ int main() {
     std::vector<uint8_t> trits = {1, 0, 1, 2, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 2, 1, 2, 0, 1};
     succinctrits::trit_vector tv(trits.begin(), trits.size());
 
+    std::cout << "=== Trie Array ===" << std::endl;
     std::cout << "addr: ";
     for (uint64_t i = 0; i < tv.get_num_trits(); ++i) {
         std::cout << i % 10 << ' ';
@@ -32,13 +33,44 @@ int main() {
     succinctrits::rs_support<1> tv_rs_1(&tv);
     succinctrits::rs_support<2> tv_rs_2(&tv);
 
-    std::cout << "Rank_0(6)   = " << tv_rs_0.rank(6) << std::endl;
-    std::cout << "Rank_1(10)  = " << tv_rs_1.rank(10) << std::endl;
-    std::cout << "Rank_2(12)  = " << tv_rs_2.rank(12) << std::endl;
-    std::cout << "Select_0(3) = " << tv_rs_0.select(3) << std::endl;
-    std::cout << "Select_1(5) = " << tv_rs_1.select(5) << std::endl;
-    std::cout << "Select_2(0) = " << tv_rs_2.select(0) << std::endl;
+    std::cout << "=== Operations ===" << std::endl;
+    std::cout << "rank_0(6)   = " << tv_rs_0.rank(6) << std::endl;
+    std::cout << "rank_1(10)  = " << tv_rs_1.rank(10) << std::endl;
+    std::cout << "rank_2(3)   = " << tv_rs_2.rank(3) << std::endl;
+    std::cout << "select_0(3) = " << tv_rs_0.select(3) << std::endl;
+    std::cout << "select_1(5) = " << tv_rs_1.select(5) << std::endl;
+    std::cout << "select_2(0) = " << tv_rs_2.select(0) << std::endl;
 
+    std::cout << "=== Statistics ===" << std::endl;
+    std::cout << "num trits: " << tv.get_num_trits() << std::endl;
+    std::cout << "num 0s:    " << tv_rs_0.get_num_target_trits() << std::endl;
+    std::cout << "num 1s:    " << tv_rs_1.get_num_target_trits() << std::endl;
+    std::cout << "num 2s:    " << tv_rs_2.get_num_target_trits() << std::endl;
+
+    {
+        std::ofstream ofs("trits.idx");
+        tv.save(ofs);
+        tv_rs_0.save(ofs);
+        tv_rs_1.save(ofs);
+        tv_rs_2.save(ofs);
+    }
+
+    {
+        std::ifstream ifs("trits.idx");
+        succinctrits::trit_vector other_tv;
+        succinctrits::rs_support<0> other_tv_rs_0;
+        succinctrits::rs_support<1> other_tv_rs_1;
+        succinctrits::rs_support<2> other_tv_rs_2;
+        other_tv.load(ifs);
+        other_tv_rs_0.load(ifs);
+        other_tv_rs_1.load(ifs);
+        other_tv_rs_2.load(ifs);
+        other_tv_rs_0.set_vector(&other_tv);
+        other_tv_rs_1.set_vector(&other_tv);
+        other_tv_rs_2.set_vector(&other_tv);
+    }
+
+    std::remove("trits.idx");
     return 0;
 }
 ```
@@ -46,43 +78,50 @@ int main() {
 The output will be
 
 ```
+=== Trie Array ===
 addr: 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 
 trit: 1 0 1 2 1 0 0 1 0 1 0 0 1 1 1 2 1 2 0 1 
-Rank_0(6)   = 2
-Rank_1(10)  = 5
-Rank_2(12)  = 1
-Select_0(3) = 8
-Select_1(5) = 12
-Select_2(0) = 3
+=== Operations ===
+rank_0(6)   = 2
+rank_1(10)  = 5
+rank_2(3)   = 0
+select_0(3) = 8
+select_1(5) = 12
+select_2(0) = 3
+=== Statistics ===
+num trits: 20
+num 0s:    7
+num 1s:    10
+num 2s:    3
 ```
 
 ## Benchmark
 
-- 3.5 GHz 6-Core Intel Xeon E5
-- 32 GB 1866 MHz DDR3
+- 3.5 GHz Intel Core i7
+- 16 GB 2133 MHz LPDDR3
 - OS X 10.14.6
 - Apple clang version 11.0.0
 
 ```
 $ ./benchmark/benchmark 
 === Benchmark for 1000000 trits ===
-# access time:	23.0729 ns/op
-# rank time:	38.6154 ns/op
-# select time:	603.316 ns/op
-# trit_vector:	1.60006 bits/trit
-# rs_support:	0.321088 bits/trit
+# access time: 19.3666 ns/op
+# rank time:   34.0611 ns/op
+# select time: 117.213 ns/op
+# trit_vector: 1.60006 bits/trit
+# rs_support:  0.321088 bits/trit
 === Benchmark for 10000000 trits ===
-# access time:	30.4135 ns/op
-# rank time:	52.1469 ns/op
-# select time:	614.085 ns/op
-# trit_vector:	1.60001 bits/trit
-# rs_support:	0.320986 bits/trit
+# access time: 27.337 ns/op
+# rank time:   43.6852 ns/op
+# select time: 143.572 ns/op
+# trit_vector: 1.60001 bits/trit
+# rs_support:  0.320986 bits/trit
 === Benchmark for 100000000 trits ===
-# access time:	26.3263 ns/op
-# rank time:	100.848 ns/op
-# select time:	700.206 ns/op
-# trit_vector:	1.6 bits/trit
-# rs_support:	0.320977 bits/trit
+# access time: 23.5833 ns/op
+# rank time:   76.2127 ns/op
+# select time: 241.136 ns/op
+# trit_vector: 1.6 bits/trit
+# rs_support:  0.320977 bits/trit
 ```
 
 ## References

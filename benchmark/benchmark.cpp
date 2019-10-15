@@ -48,7 +48,7 @@ void benchmark_access(const succinctrits::trit_vector& tv) {
         }
     }
     const double elapsed_nanosec = t.get<std::chrono::nanoseconds>();
-    std::cout << "# access time:\t" << elapsed_nanosec / NUM_QUERIES << " ns/op" << std::endl;
+    std::cout << "# access time: " << elapsed_nanosec / NUM_QUERIES << " ns/op" << std::endl;
 }
 
 template <uint8_t Trit>
@@ -66,7 +66,7 @@ void benchmark_rank(const succinctrits::rs_support<Trit>& tv_rs) {
         }
     }
     const double elapsed_nanosec = t.get<std::chrono::nanoseconds>();
-    std::cout << "# rank time:\t" << elapsed_nanosec / NUM_QUERIES << " ns/op" << std::endl;
+    std::cout << "# rank time:   " << elapsed_nanosec / NUM_QUERIES << " ns/op" << std::endl;
 }
 
 template <uint8_t Trit>
@@ -84,7 +84,7 @@ void benchmark_select(const succinctrits::rs_support<Trit>& tv_rs) {
         }
     }
     const double elapsed_nanosec = t.get<std::chrono::nanoseconds>();
-    std::cout << "# select time:\t" << elapsed_nanosec / NUM_QUERIES << " ns/op" << std::endl;
+    std::cout << "# select time: " << elapsed_nanosec / NUM_QUERIES << " ns/op" << std::endl;
 }
 
 int main() {
@@ -103,7 +103,7 @@ int main() {
 
         const double tv_size_in_bits = tv.size_in_bytes() * 8.0;
         const double rs_size_in_bits = tv_rs.size_in_bytes() * 8.0;
-        std::cout << "# trit_vector:\t" << tv_size_in_bits / tv.get_num_trits() << " bits/trit" << std::endl;
-        std::cout << "# rs_support:\t" << rs_size_in_bits / tv.get_num_trits() << " bits/trit" << std::endl;
+        std::cout << "# trit_vector: " << tv_size_in_bits / tv.get_num_trits() << " bits/trit" << std::endl;
+        std::cout << "# rs_support:  " << rs_size_in_bits / tv.get_num_trits() << " bits/trit" << std::endl;
     }
 }

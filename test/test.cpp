@@ -7,17 +7,26 @@
 static constexpr uint64_t NUM_TRITS = 5000000;
 
 std::vector<uint8_t> generate_trits() {
-    std::random_device rd;
+    std::random_device seed_gen;
+    std::default_random_engine engine(seed_gen());
+    std::uniform_int_distribution<uint8_t> dist(0, 2);
+
     std::vector<uint8_t> trits(NUM_TRITS);
     for (uint64_t i = 0; i < NUM_TRITS; ++i) {
-        trits[i] = uint8_t(rd() % 3);
+        trits[i] = dist(engine);
     }
     return trits;
 }
 
 template <uint8_t Trit>
-void test_template(const succinctrits::trit_vector& tv, const std::vector<uint8_t>& trits) {
+void test_template(const succinctrits::trit_vector& tv) {
     succinctrits::rs_support<Trit> tv_rs(&tv);
+    for (uint64_t i = 0; i < tv.get_num_trits(); ++i) {
+        if (tv[i] != tv_rs[i]) {
+            std::cerr << "Error: tv[i] != tv_rs[i] (" << int(tv[i]) << " != " << int(tv_rs[i]) << std::endl;
+            return;
+        }
+    }
 
     uint64_t rank = 0;
     for (uint64_t i = 0; i < tv.get_num_trits(); ++i) {
@@ -26,7 +35,7 @@ void test_template(const succinctrits::trit_vector& tv, const std::vector<uint8_
             std::cerr << "Error: Rank(" << i << ") = " << r << ", but != " << rank << std::endl;
             return;
         }
-        if (trits[i] == Trit) {
+        if (tv[i] == Trit) {
             ++rank;
         }
     }
@@ -47,7 +56,21 @@ int main() {
     auto trits = generate_trits();
     succinctrits::trit_vector tv(trits.begin(), trits.size());
 
-    test_template<0>(tv, trits);
-    test_template<1>(tv, trits);
-    test_template<2>(tv, trits);
+    if (tv.get_num_trits() != trits.size()) {
+        std::cerr << "Error: tv.get_num_trits() != trits.size() ("  //
+                  << tv.get_num_trits() << " != " << trits.size() << std::endl;
+        return 1;
+    }
+    for (uint64_t i = 0; i < tv.get_num_trits(); ++i) {
+        if (tv[i] != trits[i]) {
+            std::cerr << "Error: tv[i] != trits[i] (" << int(tv[i]) << " != " << int(trits[i]) << std::endl;
+            return 1;
+        }
+    }
+
+    test_template<0>(tv);
+    test_template<1>(tv);
+    test_template<2>(tv);
+
+    return 0;
 }

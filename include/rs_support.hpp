@@ -50,8 +50,16 @@ class rs_support {
         m_num_target_trits = rank;
     }
 
-    void set(const trit_vector* vec) {
+    void set_vector(const trit_vector* vec) {
         m_vec = vec;
+    }
+
+    uint8_t get(uint64_t i) const {
+        assert(m_vec != nullptr);
+        return m_vec->get(i);
+    }
+    uint8_t operator[](uint64_t i) const {
+        return get(i);
     }
 
     // Returns the number of occurrences of the target trits in m_vec between positions 0 and i-1.
@@ -83,7 +91,7 @@ class rs_support {
         assert(m_vec != nullptr);
         assert(n < m_num_target_trits);
 
-        // (1) Binary Search on Large Blocks
+        // (1) Search on Large Blocks
         uint64_t left = 0;
         uint64_t right = m_large_blocks.size();
 
@@ -97,21 +105,24 @@ class rs_support {
         }
         assert(m_large_blocks[left] <= n);
 
-        // (2) Linear Search on Small Blocks
+        // (2) Search on Small Blocks
         n = n - m_large_blocks[left];
-        uint64_t i = left * LB_PER_SB;  // position of SB
-        uint64_t j = std::min<uint64_t>(i + LB_PER_SB, m_small_blocks.size());
 
-        ++i;
-        for (; i < j; ++i) {
-            if (n < m_small_blocks[i]) {
-                break;
+        left = left * LB_PER_SB;  // position of SB
+        right = std::min<uint64_t>(left + LB_PER_SB, m_small_blocks.size());
+
+        while (left + 1 < right) {
+            const uint64_t center = (left + right) / 2;
+            if (n < m_small_blocks[center]) {
+                right = center;
+            } else {
+                left = center;
             }
         }
-        --i;
+        uint64_t i = left;
         assert(m_small_blocks[i] <= n);
 
-        // (3) Linear Search on Trytes
+        // (3) Search on the remaining trytes
         n = n - m_small_blocks[i];
         i = i * TRYTES_PER_SB;  // position of trytes
 
