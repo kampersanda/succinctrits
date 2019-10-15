@@ -1,5 +1,5 @@
 # succinctrits
-This library provides succinct Rank/Select data structures on trits (i.e., ternary digits). A vector consisting of n values from {0,1,2} is stored in 1.6n bits of space, which is close to the theoretically-optimal space usage of 1.57n bits [1]. The Rank/Select data structures are implemented in 0.32n additional bits of space in a similar manner to traditional approaches for bit arrays (e.g., [2]).
+This library provides succinct Rank/Select data structures on trits (i.e., ternary digits). A vector consisting of n values from {0,1,2} is stored in 1.6n bits of space, which is close to the theoretically-optimal space usage of 1.57n bits [1]. The Rank/Select data structures are implemented in 0.32n additional bits of space in a similar manner to traditional approaches for bit vectors (e.g., [2]).
 
 The trit-vector implementation is based on Fischer's implementation in [3].
 
