@@ -1,7 +1,7 @@
 # succinctrits
 This library provides succinct Rank/Select data structures on trits (i.e., ternary digits). A vector consisting of n values from {0,1,2} is stored in 1.6n bits of space, which is close to the theoretically-optimal space usage of 1.57n bits [1]. The Rank/Select data structures are implemented in 0.32n additional bits of space in a similar manner to traditional approaches for bit vectors (e.g., [2]).
 
-The trit-vector implementation is based on Fischer's implementation in [3].
+The trit-vector implementation is based on Fischer's approach presented in [3].
 
 ## Install
 
@@ -128,6 +128,6 @@ $ ./benchmark/benchmark
 
 ## References
 
-1. Mihai Patrascu. Succincter. In FOCS, pages 305–313, 2008.
-2. Rodrigo González, Szymon Grabowski, Veli Mäkinen, and Gonzalo Navarro. Practical implementation of rank and select queries. In WEA, pages 27–38, 2005.
-3. Johannes Fischer and Daniel Peters. GLOUDS: Representing tree-like graphs. J. Discrete Algorithm., 36:39– 49, 2016.
+1. Mihai Patrascu. **Succincter**. In *FOCS*, pages 305–313, 2008.
+2. Rodrigo González, Szymon Grabowski, Veli Mäkinen, and Gonzalo Navarro. **Practical implementation of rank and select queries**. In *WEA*, pages 27–38, 2005.
+3. Johannes Fischer and Daniel Peters. **GLOUDS: Representing tree-like graphs**. *J. Discrete Algorithm.*, 36:39–49, 2016.
