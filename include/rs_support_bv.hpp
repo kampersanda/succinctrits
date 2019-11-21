@@ -74,6 +74,7 @@ class rs_support_bv {
             basic_block_[num_lb*2] = cnt_all;
         }
         select_tips_.push_back(basic_block_.size()/2-1);
+	  	select0_tips_.push_back(basic_block_.size()/2-1);
     }
 
     void build(const bit_vector* bv) { *this = rs_support_bv(bv); }
