@@ -62,7 +62,7 @@ class rs_support {
         return get(i);
     }
 
-    // Returns the number of occurrences of the target trits in m_vec between positions 0 and i-1.
+    // Returns the number of occurrences of the target trits in rs_bv_ between positions 0 and i-1.
     uint64_t rank(const uint64_t i) const {
         assert(m_vec != nullptr);
         assert(i < m_vec->get_num_trits());
@@ -86,7 +86,7 @@ class rs_support {
         return rank;
     }
 
-    // Returns the position of the (n+1)-th occurrence of the target trit in m_vec.
+    // Returns the position of the (n+1)-th occurrence of the target trit in rs_bv_.
     uint64_t select(uint64_t n) const {
         assert(m_vec != nullptr);
         assert(n < m_num_target_trits);

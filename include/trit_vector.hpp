@@ -103,6 +103,11 @@ class trit_vector {
     uint64_t get_num_trits() const {
         return m_num_trits;
     }
+
+    size_t size() const {
+        return get_num_trits();
+    }
+
     uint64_t size_in_bytes() const {
         return m_trytes.size() * sizeof(uint8_t) + sizeof(m_num_trits);
     }
