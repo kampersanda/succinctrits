@@ -82,8 +82,10 @@ class compressed_rs_support {
     };
 
   public:
-    using iterator = trit_iterator;
-    using pointer = iterator;
+  	using const_iterator = trit_iterator;
+  	using iterator = const_iterator;
+    using const_pointer = const_iterator;
+  	using pointer = const_pointer;
 
     compressed_rs_support() = default;
 
@@ -158,9 +160,13 @@ class compressed_rs_support {
         }
     }
 
-    iterator begin() const { return {this, 0}; }
+	iterator begin() { return {this, 0}; }
 
-    iterator end() const { return {this, iterator::difference_type(size_)}; }
+	iterator end() { return {this, iterator::difference_type(size_)}; }
+
+    const_iterator begin() const { return {this, 0}; }
+
+  	const_iterator end() const { return {this, const_iterator::difference_type(size_)}; }
 
     size_t size() const { return size_; }
 
