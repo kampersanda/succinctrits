@@ -64,6 +64,7 @@ class compressed_rs_support {
             return pos_ < iter.pos_;
         }
         bool operator==(const trit_iterator& iter) const { return crs_ == iter.crs_ and pos_ == iter.pos_; }
+	  	bool operator!=(const trit_iterator& iter) const { return !(*this == iter); }
         bool operator<=(const trit_iterator& iter) const { return pos_ <= iter.pos_; }
         bool operator>(const trit_iterator& iter) const { return !(iter <= *this); }
         bool operator>=(const trit_iterator& iter) const { return !(iter < *this); }
