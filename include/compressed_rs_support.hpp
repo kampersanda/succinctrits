@@ -116,6 +116,26 @@ class compressed_rs_support {
         rank_size_ = rs_bv_.rank(vec.size());
     }
 
+    compressed_rs_support(compressed_rs_support&& x) noexcept {
+      bv_ = std::move(x.bv_);
+      rs_bv_ = std::move(x.rs_bv_);
+      rs_bv_.set_bv(&bv_);
+      code_to_val_ = x.code_to_val_;
+      val_to_code_ = x.val_to_code_;
+      size_ = x.size_;
+      rank_size_ = x.rank_size_;
+    }
+    compressed_rs_support& operator=(compressed_rs_support&& x) noexcept {
+	  bv_ = std::move(x.bv_);
+	  rs_bv_ = std::move(x.rs_bv_);
+	  rs_bv_.set_bv(&bv_);
+	  code_to_val_ = x.code_to_val_;
+	  val_to_code_ = x.val_to_code_;
+	  size_ = x.size_;
+	  rank_size_ = x.rank_size_;
+	  return *this;
+    }
+
     void build(const trit_vector& vec) {
         *this = compressed_rs_support(vec);
     }
